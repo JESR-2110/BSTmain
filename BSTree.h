@@ -95,7 +95,7 @@ private:
 		delete current;
 	}
 
-	void getElementsAux(BSTNode<E> current, List<E>* elements) {
+	void getElementsAux(BSTNode<E>* current, List<E>* elements) {
 		if (current == nullptr) {
 			return;
 		}
