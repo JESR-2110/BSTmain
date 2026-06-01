@@ -64,21 +64,21 @@ public:
 
 	List<K>* getKeys() {
 		List<Pair<K, V>>* pairs = tree.getElements();
-		List<K>* keys = new DLinkedList();
+		List<K>* keys = new DLinkedList<K>();
 
 		for (pairs->goToStart(); !pairs->atEnd(); pairs->next()) {
-			keys->append(pairs->getElement.key);
+			keys->append(pairs->getElement().key);
 		}
 		delete pairs;
 		return keys;
 	}
 
-	List<K>* getValues() {
+	List<V>* getValues() {
 		List<Pair<K, V>>* pairs = tree.getElements();
-		List<V>* values = new DLinkedList();
+		List<V>* values = new DLinkedList<V>();
 
 		for (pairs->goToStart(); !pairs->atEnd(); pairs->next()) {
-			values->append(pairs->getElement.value);
+			values->append(pairs->getElement().value);
 		}
 		delete pairs;
 		return values;
@@ -89,16 +89,64 @@ public:
 	}
 
 	void print() {
-		tree.print();
+		if (tree.isEmpty()) {
+			cout << "  (vacio)" << endl;
+			return;
+		}
+		List<Pair<K, V>>* pairs = tree.getElements();
+		for (int i = 0; i < pairs->getSize(); i++) {
+			pairs->goToPos(i);
+			Pair<K, V> p = pairs->getElement();
+			cout << "  [" << p.key << "] -> " << p.value << endl;
+		}
+		delete pairs;
 	}
 
 	void update(Dictionary<K, V>* D) {
+		List<K>* keys = D->getKeys();
+		keys->goToStart();
+		while (keys->getSize() > 0 && !keys->atEnd()) {
+			K key = keys->getElement();
+			V val = D->getValue(key);
 
+			if (this->contains(key)) {
+				this->setValue(key, val);
+			}
+			else {
+				this->insert(key, val);
+			}
+			keys->next();
+		}
+
+		if (keys->getSize() > 0) {
+			K key = keys->getElement();
+			V val = D->getValue(key);
+			if (this->contains(key)) {
+				this->setValue(key, val);
+			}
+			else {
+				this->insert(key, val);
+			}
+		}
+
+		delete keys;
 	}
 
 	void zip(List<K>* keys, List<V>* values) {
-
-	}
+    keys->goToStart();
+    values->goToStart();
+    for (int i = 0; i < keys->getSize() && i < values->getSize(); i++) {
+        keys->goToPos(i);
+        values->goToPos(i);
+        K key = keys->getElement();
+        V val = values->getElement();
+        if (this->contains(key)) {
+            this->setValue(key, val);
+        } else {
+            this->insert(key, val);
+        }
+    }
+}
 
 };
 
