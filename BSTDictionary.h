@@ -47,7 +47,8 @@ public:
 		if (!tree.contains(Pair<K, V>(key))) {
 			throw runtime_error("Key not found.");
 		}
-
+		tree.remove(Pair<K, V>(key));
+		tree.insert(Pair<K, V>(key, value));
 	}
 
 	bool contains(K key) {
@@ -104,48 +105,34 @@ public:
 
 	void update(Dictionary<K, V>* D) {
 		List<K>* keys = D->getKeys();
-		keys->goToStart();
-		while (keys->getSize() > 0 && !keys->atEnd()) {
+		for (int i = 0; i < keys->getSize(); i++) {
+			keys->goToPos(i);
 			K key = keys->getElement();
 			V val = D->getValue(key);
-
-			if (this->contains(key)) {
-				this->setValue(key, val);
+			if (contains(key)) {
+				setValue(key, val);
 			}
 			else {
-				this->insert(key, val);
-			}
-			keys->next();
-		}
-
-		if (keys->getSize() > 0) {
-			K key = keys->getElement();
-			V val = D->getValue(key);
-			if (this->contains(key)) {
-				this->setValue(key, val);
-			}
-			else {
-				this->insert(key, val);
+				insert(key, val);
 			}
 		}
-
 		delete keys;
 	}
 
 	void zip(List<K>* keys, List<V>* values) {
-    keys->goToStart();
-    values->goToStart();
-    for (int i = 0; i < keys->getSize() && i < values->getSize(); i++) {
-        keys->goToPos(i);
-        values->goToPos(i);
-        K key = keys->getElement();
-        V val = values->getElement();
-        if (this->contains(key)) {
-            this->setValue(key, val);
-        } else {
-            this->insert(key, val);
-        }
-    }
+		int size = (keys->getSize() < values->getSize() ? keys->getSize() : values->getSize());
+		for (int i = 0; i < size; i++) {
+			keys->goToPos(i);
+			values->goToPos(i);
+			K key = keys->getElement();
+			V val = values->getElement();
+			if (contains(key)) {
+				setValue(key, val);
+			}
+			else {
+				insert(key, val);
+			}
+		}
 }
 
 };
