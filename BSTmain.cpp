@@ -1,6 +1,7 @@
 #include <iostream>
 #include <stdexcept>
 #include <string>
+#include "List.h"
 #include "BSTDictionary.h"
 
 using namespace std;
